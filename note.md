@@ -1,50 +1,26 @@
 # [canu](https://github.com/marbl/canu)
 ## [document](https://canu.readthedocs.io/)
 ```bash
-# Assemble
-canu -correct \
-  -p ecoli -d ecoli \
-  genomeSize=4.8m \
-  -pacbio  pacbio.fastq
-
-# trim
-canu -trim \
-  -p ecoli -d ecoli \
-  genomeSize=4.8m \
-  -corrected -pacbio ecoli/ecoli.correctedReads.fasta.gz
-
-canu \
-  -p ecoli -d ecoli-erate-0.039 \
-  genomeSize=4.8m \
-  correctedErrorRate=0.039 \
-  -trimmed -corrected -pacbio ecoli/ecoli.trimmedReads.fasta.gz
-```
-
-```bash
 docker pull staphb/canu:2.2
-docker pull staphb/canu
 docker run --rm -ti staphb/canu:2.2 canu -h
-
 
 # Assembly
 docker run --rm -ti \
 -v $(pwd)/raw_data/:/raw_data/:ro \
 -v $(pwd)/canu/:/data/ \
 staphb/canu:2.2 \
-canu \
-  -p SAMN15455050 -d SAMN15455050 \
-  genomeSize=3.2m \
-  -pacbio /raw_data/Pacbio/SRR12159828.fastq.gz
+canu genomeSize=3.2m \
+ -p SAMN15455050 -d SAMN15455050 \
+ -pacbio /raw_data/Pacbio/SRR12159828.fastq.gz
 
 # Trim
 docker run --rm -ti \
 -v $(pwd)/raw_data/:/raw_data/:ro \
 -v $(pwd)/canu/:/data/ \
 staphb/canu:2.2 \
-canu \
- -p SAMN15455050 -d SAMN15455050-erate-0.0015 \
- genomeSize=3.2m \
- correctedErrorRate=0.039 \
+canu genomeSize=3.2m \
+ -p SAMN15455050 -d SAMN15455050-erate-0.015 \
+ correctedErrorRate=0.015 \
  -trimmed -corrected -pacbio SAMN15455050/SAMN15455050.trimmedReads.fasta.gz
 
 
@@ -75,10 +51,14 @@ docker pull staphb/busco:5.8.2
 ```bash
 docker pull staphb/bwa:0.7.18
 
-time bwa index i -p argv$output_path/sample_id
+docker run --rm -ti staphb/bwa:0.7.18 bwa -h
 
 
-time bwa mem -t 4 $index $fastq -o ${output}.sam
+## build index
+time bwa index ${genome_fasta} -p $index_name
+
+## Run alignment
+time bwa mem -t 4 $index_name $fastq -o ${output}.sam
 
 
 ```
