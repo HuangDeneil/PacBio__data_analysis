@@ -47,3 +47,52 @@ services:
   #     canu_Trim:
   #       condition: service_completed_successfully
 
+
+  # bwa_index:
+  #   image: staphb/bwa:0.7.18
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       cd /data/RefSeq/GCF_009913655.1/; 
+  #       time bwa index ./GCF_009913655.1.fna -p GCF_009913655.1
+  #   depends_on:
+  #     canu_Trim:
+  #       condition: service_completed_successfully
+
+  # bwa_mem:
+  #   image: staphb/bwa:0.7.18
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       mkdir -p bwa; 
+  #       time bwa mem -t 4 GCF_009913655.1 $fastq -o ./bwa/SAMN15455050.sam
+  #   depends_on:
+  #     bwa_index:
+  #       condition: service_completed_successfully
+
+
+  # samtools_extracting_map_reads:
+  #   image: staphb/samtools:1.21
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       mkdir -p samtools; 
+  #       time samtools fastq -@ 4 -F 4 ./bwa/SAMN15455050.sam > ./samtools/SAMN15455050.map.fq 
+  #   depends_on:
+  #     bwa_mem:
+  #       condition: service_completed_successfully
+
+
+
+  # spades_Assembly:
+  #   image: staphb/spades:4.0.0
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       bin/spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
+  #   depends_on:
+  #     samtools_extracting_map_reads:
+  #       condition: service_completed_successfully
+
+
+

@@ -2,3 +2,5 @@
 canu
 assembly_summary.txt
 *.log
+*.fna
+*.faa
