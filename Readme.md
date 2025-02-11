@@ -31,6 +31,9 @@ canu genomeSize=3.2m \
 ```bash
 docker pull staphb/quast:5.3.0
 
+docker run --rm -ti staphb/quast:5.3.0 quast.py
+
+
 ./quast.py test_data/contigs_1.fasta \
            test_data/contigs_2.fasta \
         -r test_data/reference.fasta.gz \
@@ -51,7 +54,7 @@ docker pull staphb/busco:5.8.2
 ```bash
 docker pull staphb/bwa:0.7.18
 
-docker run --rm -ti staphb/bwa:0.7.18 bwa -h
+docker run --rm -ti staphb/bwa:0.7.18 bwa
 
 
 ## build index

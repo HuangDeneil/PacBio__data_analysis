@@ -1,0 +1,49 @@
+version: "2.32.1"
+name: Bioinformatics_pipeline
+services:
+  canu_Assembly:
+    image: staphb/canu:2.2
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        canu genomeSize=3.2m -p canu -d canu -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+
+  canu_Trim:
+    image: staphb/canu:2.2
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        canu genomeSize=3.2m -p canu -d canu-erate-0.015 correctedErrorRate=0.015 -trimmed -corrected -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+    depends_on:
+      canu_Assembly:
+        condition: service_completed_successfully
+
+  # quast_assembly_evaluation:
+  #   image: staphb/quast:5.3.0
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       quast.py
+  #   depends_on:
+  #     canu_Trim:
+  #       condition: service_completed_successfully
+
+# ./quast.py test_data/contigs_1.fasta \
+#            test_data/contigs_2.fasta \
+#         -r test_data/reference.fasta.gz \
+#         -g test_data/genes.txt \
+#         -1 test_data/reads1.fastq.gz -2 test_data/reads2.fastq.gz \
+#         -o quast_test_output
+
+
+
+  # busco_Benchmarking:
+  #   image: staphb/busco:5.8.2
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       busco -i genome.fna
+  #   depends_on:
+  #     canu_Trim:
+  #       condition: service_completed_successfully
+

@@ -1,1 +1,4 @@
 *.gz
+canu
+assembly_summary.txt
+*.log
