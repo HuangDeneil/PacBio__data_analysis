@@ -86,5 +86,56 @@ bin/spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
 
 ```
 
+```bash
+docker pull staphb/prokka:1.14.6
+docker run --rm -ti staphb/prokka:1.14.6 prokka -h
+
+docker run --rm -ti \
+-v /home/share/SAMN15455050/:/data/ \
+staphb/prokka:1.14.6 \
+prokka \
+ --outdir ./prokka/SAMN15455050 --force \
+ --prefix SAMN15455050 --addgenes --locustag LAP \
+ --increment 10 --gffver 2 --centre CDC --compliant \
+ --genus Lactiplantibacillus --species plantarum \
+ --kingdom Bacteria --gcode 11 --usegenus \
+ --proteins /opt/prokka/db/trusted/Ecocyc-17.6 \
+ --evalue 1e-9 --rfam \
+ --cpus 4 \
+ ./canu/canu.contigs.fasta
+
+# Lactiplantibacillus plantarum
 
 
+```
+
+
+```bash
+docker pull staphb/roary:3.13.0
+docker run --rm -ti staphb/roary:3.13.0 roary -h
+
+
+
+```
+
+```bash
+docker pull staphb/plasmidfinder:2.1.6_2024-03-07
+
+
+```
+
+
+
+
+```bash
+docker pull staphb/circlator:1.5.5
+
+
+
+```
+
+## [igv-reports](https://github.com/igvteam/igv-reports)
+```bash
+docker pull staphb/igv-reports:1.12.0
+
+```

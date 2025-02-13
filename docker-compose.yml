@@ -1,22 +1,22 @@
 version: "2.32.1"
 name: Bioinformatics_pipeline
 services:
-  canu_Assembly:
-    image: staphb/canu:2.2
-    volumes:
-      - /home/share/SAMN15455050/:/data/:rw
-    command: |
-        canu genomeSize=3.2m -p canu -d canu -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+  # canu_Assembly:
+  #   image: staphb/canu:2.2
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       canu genomeSize=3.2m -p canu -d canu -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
 
-  canu_Trim:
-    image: staphb/canu:2.2
-    volumes:
-      - /home/share/SAMN15455050/:/data/:rw
-    command: |
-        canu genomeSize=3.2m -p canu -d canu-erate-0.015 correctedErrorRate=0.015 -trimmed -corrected -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
-    depends_on:
-      canu_Assembly:
-        condition: service_completed_successfully
+  # canu_Trim:
+  #   image: staphb/canu:2.2
+  #   volumes:
+  #     - /home/share/SAMN15455050/:/data/:rw
+  #   command: |
+  #       canu genomeSize=3.2m -p canu -d canu correctedErrorRate=0.015 -trimmed -corrected -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+  #   depends_on:
+  #     canu_Assembly:
+  #       condition: service_completed_successfully
 
   # quast_assembly_evaluation:
   #   image: staphb/quast:5.3.0
@@ -48,27 +48,33 @@ services:
   #       condition: service_completed_successfully
 
 
-  # bwa_index:
+  # build_bwa_index:
   #   image: staphb/bwa:0.7.18
   #   volumes:
-  #     - /home/share/SAMN15455050/:/data/:rw
+  #     - /home/share/SAMN15455050/RefSeq/GCF_009913655.1/:/data/:rw
   #   command: |
-  #       cd /data/RefSeq/GCF_009913655.1/; 
-  #       time bwa index ./GCF_009913655.1.fna -p GCF_009913655.1
+  #       bwa index -p GCF_009913655.1 GCF_009913655.1.fna 
   #   depends_on:
   #     canu_Trim:
   #       condition: service_completed_successfully
-
-  # bwa_mem:
-  #   image: staphb/bwa:0.7.18
-  #   volumes:
-  #     - /home/share/SAMN15455050/:/data/:rw
-  #   command: |
-  #       mkdir -p bwa; 
-  #       time bwa mem -t 4 GCF_009913655.1 $fastq -o ./bwa/SAMN15455050.sam
-  #   depends_on:
-  #     bwa_index:
-  #       condition: service_completed_successfully
+  
+  build_bwa_folder:
+    image: staphb/bwa:0.7.18
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        mkdir -p bwa
+  
+  bwa_mem:
+    image: staphb/bwa:0.7.18
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        bwa mem -t 4 RefSeq/GCF_009913655.1/GCF_009913655.1 ./canu/canu.contigs.fasta -o ./bwa/SAMN15455050.sam
+  #      bwa mem -t 4 RefSeq/GCF_009913655.1/GCF_009913655.1 ./raw_data/Pacbio/SRR12159828.fastq.gz -o ./bwa/SAMN15455050.raw.sam
+    depends_on:
+      build_bwa_folder:
+        condition: service_completed_successfully
 
 
   # samtools_extracting_map_reads:
