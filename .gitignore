@@ -6,6 +6,10 @@ assembly_summary.txt
 *.faa
 *.sam
 *.bam
+
+*.svg
+
+## prokka results
 *.gff
 *.gff3
 *.gtf
@@ -16,10 +20,31 @@ assembly_summary.txt
 *.sqn
 *.tbl
 
+*.fastq
+*.fq
+*.fasta
+*.fa
+*.fq.gz
+*.fastq.gz
+
+## bwa db
 *.amb
 *.ann
 *.bwt
 *.pac
 *.sa
+
+## blast db data
+*.ndb
+*.nhr
+*.nin
+*.nsq
+*.njs
+*.nog
+*.nos
+*.nto
+*.nsq
+*.ntf
+*.nto
 
 

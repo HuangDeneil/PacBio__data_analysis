@@ -1,0 +1,20 @@
+version: "2.32.1"
+name: Bioinformatics_pipeline (canu)
+services:
+  canu_Assembly:
+    image: staphb/canu:2.2
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        canu genomeSize=3.2m -p canu -d canu -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+
+  canu_Trim:
+    image: staphb/canu:2.2
+    volumes:
+      - /home/share/SAMN15455050/:/data/:rw
+    command: |
+        canu genomeSize=3.2m -p canu -d canu correctedErrorRate=0.015 -trimmed -corrected -pacbio /data/raw_data/Pacbio/SRR12159828.fastq.gz
+    depends_on:
+      canu_Assembly:
+        condition: service_completed_successfully
+

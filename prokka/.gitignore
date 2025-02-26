@@ -1,0 +1,14 @@
+## prokka results
+*.gff
+*.gff3
+*.gtf
+*.err
+*.ffn
+*.fsa
+*.gbk
+*.sqn
+*.tbl
+*.txt
+
+SAMN15455050/
+

@@ -1,0 +1,16 @@
+## roary results
+*.err
+*.faa
+*.ffn
+*.fna
+*.fsa
+*.gbk
+*.gff
+*.log
+*.sqn
+*.tbl
+*.tsv
+*.txt
+
+
+
